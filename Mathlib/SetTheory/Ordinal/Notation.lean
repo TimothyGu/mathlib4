@@ -1231,7 +1231,7 @@ def Nonote :=
   { o : Onote // o.NF }
 #align nonote Nonote
 
-instance : DecidableEq Nonote := by unfold Nonote <;> infer_instance
+instance : DecidableEq Nonote := by unfold Nonote ; infer_instance
 
 namespace Nonote
 
