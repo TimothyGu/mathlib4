@@ -11,6 +11,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 import Mathlib.Data.Set.Intervals.Pi
 import Mathlib.Data.Set.Pointwise.Interval
 import Mathlib.Order.Filter.Interval
+import Mathlib.Tactic.TFAE
 import Mathlib.Topology.Support
 import Mathlib.Topology.Algebra.Order.LeftRight
 
@@ -1590,16 +1591,18 @@ theorem TFAE_mem_nhdsWithin_Ioi {a b : α} (hab : a < b) (s : Set α) :
       s ∈ 𝓝[Ioo a b] a,
       ∃ u ∈ Ioc a b, Ioo a u ⊆ s,
       ∃ u ∈ Ioi a, Ioo a u ⊆ s] := by
-  rw [nhdsWithin_Ioc_eq_nhdsWithin_Ioi hab, nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
-  apply_rules [tfae_of_cycle, Chain.cons, Chain.nil] <;> try { exact id }
+  tfae_have 1 ↔ 2; rw [nhdsWithin_Ioc_eq_nhdsWithin_Ioi hab]
+  tfae_have 1 ↔ 3; rw [nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
+  tfae_have 4 → 5; exact fun ⟨u, umem, hu⟩ => ⟨u, umem.1, hu⟩
+  tfae_have 5 → 1
+  · rintro ⟨u, hu, hs⟩
+    exact mem_of_superset (Ioo_mem_nhdsWithin_Ioi' hu) hs
+  tfae_have 1 → 4
   · rw [nhdsWithin, mem_inf_principal]
     intro h
     rcases exists_Ico_subset_of_mem_nhds' h hab with ⟨u, au, hu⟩
     exact ⟨u, au, fun x hx => hu (Ioo_subset_Ico_self hx) hx.1⟩
-  · rintro ⟨u, hu, hs⟩
-    exact ⟨u, hu.1, hs⟩
-  · rintro ⟨u, hu, hs⟩
-    exact mem_of_superset (Ioo_mem_nhdsWithin_Ioi' hu) hs
+  tfae_finish
 #align tfae_mem_nhds_within_Ioi TFAE_mem_nhdsWithin_Ioi
 
 theorem mem_nhdsWithin_Ioi_iff_exists_mem_Ioc_Ioo_subset {a u' : α} {s : Set α} (hu' : a < u') :
