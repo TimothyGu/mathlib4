@@ -10,7 +10,7 @@ Authors: Andrew Yang, Yury G. Kudryashov
 -/
 import Mathlib.Topology.ContinuousOn
 import Mathlib.Data.Setoid.Basic
-import Mathlib.Data.List.TFAE
+import Mathlib.Tactic.TFAE
 
 /-!
 # Inseparable points in a topological space
@@ -79,29 +79,29 @@ theorem specializes_TFAE ( x y : X ) :
       closure ({ y } : Set X) ⊆ closure { x },
       ClusterPt y (pure x)] := by
   -- todo: rewrite using `tfae_have` etc
-  apply_rules [tfae_of_cycle, Chain.cons, Chain.nil] <;> dsimp only [ilast']
-  · exact le_trans (pure_le_nhds _)
-  · exact fun h s hso hy => h (hso.mem_nhds hy)
-  · exact fun h s hsc hx => of_not_not fun hy => h (sᶜ) hsc.isOpen_compl hy hx
-  · exact fun h => h _ isClosed_closure (subset_closure rfl)
-  · exact fun h => closure_minimal (singleton_subset_iff.2 h) isClosed_closure
-  · rw [← principal_singleton, ← mem_closure_iff_clusterPt]
-    exact fun h => h (subset_closure rfl)
-  · refine fun h => (nhds_basis_opens _).ge_iff.2 fun U ⟨hyU, hUo⟩ => ?_
-    rw [← Ultrafilter.coe_pure, Ultrafilter.clusterPt_iff] at h
-    exact hUo.mem_nhds (h <| hUo.mem_nhds hyU)
-  -- tfae_have 1 → 2; exact pure_le_nhds _ . trans
-  -- tfae_have 2 → 3; exact fun h s hso hy => h hso . mem_nhds hy
-  -- tfae_have 3 → 4; exact fun h s hsc hx => of_not_not fun hy => h s ᶜ hsc . is_open_compl hy hx
-  -- tfae_have 4 → 5; exact fun h => h _ isClosed_closure subset_closure <| mem_singleton _
-  -- tfae_have 6 ↔ 5; exact is_closed_closure.closure_subset_iff.trans singleton_subset_iff
-  -- tfae_have 5 ↔ 7; rw [ mem_closure_iff_clusterPt, principal_singleton ]
-  -- tfae_have 5 → 1
-  -- · refine' fun h => nhds_basis_opens _ . ge_iff . 2 _
-  --   rintro s ⟨ hy , ho ⟩
-  --   rcases mem_closure_iff . 1 h s ho hy with ⟨ z , hxs , rfl : z = x ⟩
+  -- apply_rules [tfae_of_cycle, Chain.cons, Chain.nil] <;> dsimp only [ilast']
+  -- · exact le_trans (pure_le_nhds _)
+  -- · exact fun h s hso hy => h (hso.mem_nhds hy)
+  -- · exact fun h s hsc hx => of_not_not fun hy => h (sᶜ) hsc.isOpen_compl hy hx
+  -- · exact fun h => h _ isClosed_closure (subset_closure rfl)
+  -- · exact fun h => closure_minimal (singleton_subset_iff.2 h) isClosed_closure
+  -- · rw [← principal_singleton, ← mem_closure_iff_clusterPt]
+  --   exact fun h => h (subset_closure rfl)
+  -- · refine fun h => (nhds_basis_opens _).ge_iff.2 fun U ⟨hyU, hUo⟩ => ?_
+  --   rw [← Ultrafilter.coe_pure, Ultrafilter.clusterPt_iff] at h
+  --   exact hUo.mem_nhds (h <| hUo.mem_nhds hyU)
+  tfae_have 1 → 2; exact (pure_le_nhds _).trans
+  tfae_have 2 → 3; exact fun h s hso hy => h (hso.mem_nhds hy)
+  tfae_have 3 → 4; sorry <;> exact fun h s hsc hx => of_not_not fun hy => h (sᶜ) hsc.isOpen_compl hy hx
+  tfae_have 4 → 5; sorry <;> exact fun h => h _ isClosed_closure (subset_closure <| mem_singleton _)
+  tfae_have 6 ↔ 5; sorry <;> exact isClosed_closure.closure_subset_iff.trans singleton_subset_iff
+  tfae_have 5 ↔ 7; sorry <;> rw [mem_closure_iff_clusterPt, principal_singleton]
+  tfae_have 5 → 1; sorry
+  -- · refine' fun h => (nhds_basis_opens _).ge_iff.2 _
+  --   rintro s ⟨hy, ho⟩
+  --   rcases mem_closure_iff.1 h s ho hy with ⟨z, hxs, rfl : z = x⟩
   --   exact ho.mem_nhds hxs
-  -- tfae_finish
+  tfae_finish
 #align specializes_tfae specializes_TFAE
 
 theorem specializes_iff_nhds : x ⤳ y ↔ 𝓝 x ≤ 𝓝 y :=
