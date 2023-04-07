@@ -1227,6 +1227,7 @@ import Mathlib.Mathport.Syntax
 import Mathlib.MeasureTheory.CardMeasurableSpace
 import Mathlib.MeasureTheory.MeasurableSpace
 import Mathlib.MeasureTheory.MeasurableSpaceDef
+import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.MeasureTheory.PiSystem
 import Mathlib.NumberTheory.ADEInequality
 import Mathlib.NumberTheory.Basic
