@@ -18,6 +18,13 @@ lean_lib Mathlib.Mathport.Rename where
     "-Dpp.unicode.fun=true" -- pretty-prints `fun a ↦ b`
   ]
 
+lean_lib Mathlib.Tactic.ToAdditive where
+  precompileModules := true
+  moreLeanArgs := #[
+    "-DwarningAsError=true",
+    "-Dpp.unicode.fun=true" -- pretty-prints `fun a ↦ b`
+  ]
+
 @[default_target]
 lean_exe runLinter where
   root := `scripts.runLinter
